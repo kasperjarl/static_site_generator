@@ -1,5 +1,5 @@
 import unittest
-from htmlnode import HTMLNODE
+from htmlnode import HTMLNODE, LeafNode
 
 class TestHtmlNode(unittest.TestCase):
 
@@ -46,3 +46,18 @@ class TestHtmlNode(unittest.TestCase):
             node.props_to_html()
         
         self.assertEqual(str(context.exception), "props must be a dictionary")
+
+    def test_LeafNode_eq(self):
+        leaf_test = LeafNode("p", "This is a paragraph of text.")
+        leaf_test1 = LeafNode("p", "This is a paragraph of text.")
+        self.assertEqual(leaf_test, leaf_test1)
+
+    def test_LeafNode_eq(self):
+        leaf_test = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        leaf_test1 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertEqual(leaf_test, leaf_test1)
+
+    def test_LeafNode_eq(self):
+        leaf_test = LeafNode(None, "Click me!", {"href": "https://www.google.com"})
+        leaf_test1 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertNotEqual(leaf_test, leaf_test1)

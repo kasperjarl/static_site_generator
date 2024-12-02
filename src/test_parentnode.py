@@ -39,7 +39,7 @@ class TestParentNode(unittest.TestCase):
             equals = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
             self.assertEquals(test, equals)       
 
-        def test_eq(self):
+        def test_nested_parentnodes(self):
             node = ParentNode(
                 "p",
                 [
@@ -56,3 +56,16 @@ class TestParentNode(unittest.TestCase):
             test = node.to_html()
             equals = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<x><c>code text</c><d><i>you killed kenny</i></d></x></p>"
             self.assertEquals(test, equals)   
+
+        def test_missing_value_in_childrens_leafnodes(self):
+            node = ParentNode(
+                "p",
+                [
+                    LeafNode("b", "Bold text"),
+                    LeafNode(None, None),
+                    LeafNode("i", "italic text"),
+                    LeafNode(None, "Normal text"),
+                ],
+            )
+            with self.assertRaises(ValueError) as context:
+                node.to_html()   

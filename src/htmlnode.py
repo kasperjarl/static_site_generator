@@ -40,17 +40,42 @@ class HTMLNODE:
 
 class LeafNode(HTMLNODE):
     def __init__(self, tag, value, props=None):
-        super().__init__(tag, value, props=None)
+        super().__init__(tag, value, children=None, props=props)
         self.tag = tag
         self.value = value
         self.props = props
 
     def to_html(self):
         if not self.value:
-            raise ValueError("All leaf nodes must have a value")
+            raise ValueError("LeafNode 'self.value' can not be empty")
         elif not self.tag:
             return f"{self.value}"
         elif self.props:
             return f'<{self.tag} href="{self.props["href"]}">{self.value}</{self.tag}>'
         else:
             return f"<{self.tag}>{self.value}</{self.tag}>"
+
+class ParentNode(HTMLNODE):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, value=None, children=children, props=props)
+
+
+    def to_html(self):
+        childrens = self.children
+        if not self.tag:
+            raise ValueError("ParentNode 'self.tag' can not be empty")
+        if not self.children:
+            raise ValueError("ParentNode 'self.children' can not be empty")
+        
+        # Now we need to do the recursion stuff:
+        start = f"<{self.tag}>"
+        for child in childrens:
+            if isinstance(child, LeafNode):
+                start += child.to_html()
+            else:
+                childrens = child
+                start += child.to_html()
+        return start + f"</{self.tag}>"
+
+
+    

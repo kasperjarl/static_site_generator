@@ -1,5 +1,6 @@
 import unittest
 from htmlnode import HTMLNODE, LeafNode
+from textnode import TextType, TextNode
 
 class TestHtmlNode(unittest.TestCase):
 
@@ -61,3 +62,39 @@ class TestHtmlNode(unittest.TestCase):
         leaf_test = LeafNode(None, "Click me!", {"href": "https://www.google.com"})
         leaf_test1 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         self.assertNotEqual(leaf_test, leaf_test1)
+
+    def test_text_node_to_html_node_TEXT(self):
+        text_node = TextNode("this should just be normal text", TextType.TEXT)
+        node = HTMLNODE.text_node_to_html_node(text_node).to_html()
+        correct = "this should just be normal text"
+        self.assertEqual(node, correct)
+
+    def test_text_node_to_html_node_Bold(self):
+        text_node = TextNode("this should just be normal text", TextType.BOLD)
+        node = HTMLNODE.text_node_to_html_node(text_node).to_html()
+        correct = "<b>this should just be normal text</b>"
+        self.assertEqual(node, correct)
+
+    def test_text_node_to_html_node_italic(self):
+        text_node = TextNode("this should just be normal text", TextType.ITALIC)
+        node = HTMLNODE.text_node_to_html_node(text_node).to_html()
+        correct = "<i>this should just be normal text</i>"
+        self.assertEqual(node, correct)
+
+    def test_text_node_to_html_node_code(self):
+        text_node = TextNode("this should just be normal text", TextType.CODE)
+        node = HTMLNODE.text_node_to_html_node(text_node).to_html()
+        correct = "<code>this should just be normal text</code>"
+        self.assertEqual(node, correct)
+
+    def test_text_node_to_html_node_link(self):
+        text_node = TextNode("Click me", TextType.LINK, "https://boot.dev")
+        node = HTMLNODE.text_node_to_html_node(text_node).to_html()
+        correct = '<a href="https://boot.dev">Click me</a>'
+        self.assertEqual(node, correct)
+
+    def test_text_node_to_html_node_image(self):
+        text_node = TextNode("Alt text description", TextType.IMAGE, "https://example.com/image.png")
+        node = HTMLNODE.text_node_to_html_node(text_node).to_html()
+        correct = '<img src="https://example.com/image.png" alt="Alt text description" />'
+        self.assertEqual(node, correct)

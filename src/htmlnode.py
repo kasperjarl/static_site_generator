@@ -1,9 +1,41 @@
+from textnode import TextType
+from enum import Enum
+
 class HTMLNODE:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
         self.value = value
         self.children = children
         self.props = props
+
+    def text_node_to_html_node(text_node):
+        match text_node.text_type:
+            case TextType.TEXT:
+                node = LeafNode(None, text_node.text)
+                return node
+            case TextType.BOLD:
+                node = LeafNode("b", text_node.text)
+                return node
+            case TextType.ITALIC:
+                node = LeafNode("i", text_node.text)
+                return node
+            case TextType.CODE:
+                node = LeafNode("code", text_node.text)
+                return node
+            case TextType.LINK:
+                node = LeafNode("a", text_node.text, props = {"href": text_node.url})
+                return node
+            case TextType.IMAGE:
+                node = LeafNode("img", "", props = {
+                                            "src": text_node.url,
+                                            "alt": text_node.text
+                                        } )
+                return node
+            case _:
+                raise Exception(f"{text_node.text_type} TextType not recognized")
+
+            
+
 
     def to_html(self):
         raise NotImplementedError
@@ -37,7 +69,6 @@ class HTMLNODE:
             f"tag: {self.tag}\nvalue: {self.value}\nchildren: {self.children}\nprops: {self.props}"
             )
 
-
 class LeafNode(HTMLNODE):
     def __init__(self, tag, value, props=None):
         super().__init__(tag, value, children=None, props=props)
@@ -46,8 +77,11 @@ class LeafNode(HTMLNODE):
         self.props = props
 
     def to_html(self):
-        if not self.value:
-            raise ValueError("LeafNode 'self.value' can not be empty")
+        # Handle 'img' tag with a self-closing slash
+        if self.tag == "img":
+            return f'<{self.tag} src="{self.props["src"]}" alt="{self.props["alt"]}" />'
+        elif not self.value:
+            raise ValueError("LeafNode 'self.value' cannot be empty")
         elif not self.tag:
             return f"{self.value}"
         elif self.props:

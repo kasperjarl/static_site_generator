@@ -37,7 +37,7 @@ class TestParentNode(unittest.TestCase):
             )
             test = node.to_html()
             equals = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
-            self.assertEquals(test, equals)       
+            self.assertEqual(test, equals)       
 
         def test_nested_parentnodes(self):
             node = ParentNode(
@@ -55,7 +55,7 @@ class TestParentNode(unittest.TestCase):
             )    
             test = node.to_html()
             equals = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<x><c>code text</c><d><i>you killed kenny</i></d></x></p>"
-            self.assertEquals(test, equals)   
+            self.assertEqual(test, equals)   
 
         def test_missing_value_in_childrens_leafnodes(self):
             node = ParentNode(

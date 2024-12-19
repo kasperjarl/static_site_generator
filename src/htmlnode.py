@@ -101,7 +101,6 @@ class ParentNode(HTMLNODE):
         if not self.children:
             raise ValueError("ParentNode 'self.children' can not be empty")
         
-        # Now we need to do the recursion stuff:
         start = f"<{self.tag}>"
         for child in childrens:
             if isinstance(child, LeafNode):
